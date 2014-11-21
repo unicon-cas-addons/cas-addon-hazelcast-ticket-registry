@@ -1,0 +1,36 @@
+buildscript {
+    repositories {
+        maven { url 'http://repo.spring.io/plugins-release' }
+    }
+    dependencies {
+        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
+    }
+}
+
+plugins {
+    id "java"
+    id "groovy"
+}
+
+configure(allprojects) {
+    apply plugin: 'propdeps'
+    apply plugin: 'propdeps-maven'
+    apply plugin: 'propdeps-idea'
+    apply plugin: 'propdeps-eclipse'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    // CAS depedency. Should be provided
+    provided "org.jasig.cas:cas-server-core:${project.'cas.version'}"
+
+    // Hazelcast dependencies
+    compile "com.hazelcast:hazelcast:${project.'hazelcast.version'}"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.1'
+}
