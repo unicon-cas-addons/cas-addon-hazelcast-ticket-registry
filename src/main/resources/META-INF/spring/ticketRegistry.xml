@@ -1,11 +1,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans.xsd
-                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
-    <bean id="hazelcast"
-          class="com.hazelcast.core.Hazelcast"
-          factory-method="newHazelcastInstance">
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="hazelcast" class="com.hazelcast.core.Hazelcast" factory-method="newHazelcastInstance">
         <constructor-arg name="config">
             <bean class="com.hazelcast.config.Config">
                 <property name="properties">
@@ -43,23 +42,22 @@
         </constructor-arg>
     </bean>
 
-    <bean id="tcpIpHazelcastJoinConfig"
-          class="com.hazelcast.config.JoinConfig">
+    <bean id="tcpIpHazelcastJoinConfig" class="com.hazelcast.config.JoinConfig">
         <property name="multicastConfig">
             <bean class="com.hazelcast.config.MulticastConfig">
-                <property name="enabled" value="false" />
+                <property name="enabled" value="false"/>
             </bean>
         </property>
         <property name="tcpIpConfig">
             <bean class="com.hazelcast.config.TcpIpConfig">
-                <property name="enabled" value="true" />
-                <property name="members" value="${hz.cluster.members:localhost}" />
+                <property name="enabled" value="true"/>
+                <property name="members" value="${hz.cluster.members:localhost}"/>
             </bean>
         </property>
     </bean>
 
     <bean id="ticketRegistry"
-          class="net.unicon.cas.addons.ticket.registry.HazelcastTicketRegistry">
+          class="net.unicon.cas.addon.ticket.registry.HazelcastTicketRegistry">
         <constructor-arg name="hz" ref="hazelcast"/>
         <constructor-arg name="mapName" value="tickets"/>
         <constructor-arg name="ticketGrantingTicketTimoutInSeconds" value="${tgt.maxTimeToLiveInSeconds:28800}"/>

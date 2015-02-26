@@ -1,4 +1,4 @@
-package net.unicon.cas.addons.ticket.registry;
+package net.unicon.cas.addon.ticket.registry;
 
 import com.hazelcast.config.MapConfig;
 import com.hazelcast.core.HazelcastInstance;
@@ -9,7 +9,6 @@ import org.jasig.cas.ticket.TicketGrantingTicket;
 import org.jasig.cas.ticket.registry.AbstractTicketRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
@@ -23,17 +22,20 @@ import java.util.concurrent.TimeUnit;
  * <p/>
  *
  * @author Dmitriy Kopylenko
- * @author Unicon, inc.
+ * @author Jonathan Johnson
+ * @since 1.0.0
  */
 public class HazelcastTicketRegistry extends AbstractTicketRegistry {
+
     private static final Logger logger = LoggerFactory.getLogger(HazelcastTicketRegistry.class);
 
     private final IMap<String, Ticket> registry;
+
     private final long serviceTicketTimeoutInSeconds;
+
     private final long ticketGrantingTicketTimoutInSeconds;
 
     /**
-     *
      * @param hz An instance of <code>HazelcastInstance</code>
      * @param mapName Name of map to use
      * @param ticketGrantingTicketTimoutInSeconds TTL for TGT entries
@@ -41,8 +43,6 @@ public class HazelcastTicketRegistry extends AbstractTicketRegistry {
      */
     public HazelcastTicketRegistry(HazelcastInstance hz, String mapName, long ticketGrantingTicketTimoutInSeconds, long serviceTicketTimeoutInSeconds) {
         logInitialization(hz, mapName, ticketGrantingTicketTimoutInSeconds, serviceTicketTimeoutInSeconds);
-
-        hz.getConfig().addMapConfig(new MapConfig());
         this.registry = hz.getMap(mapName);
         this.ticketGrantingTicketTimoutInSeconds = ticketGrantingTicketTimoutInSeconds;
         this.serviceTicketTimeoutInSeconds = serviceTicketTimeoutInSeconds;
@@ -50,11 +50,9 @@ public class HazelcastTicketRegistry extends AbstractTicketRegistry {
 
     private void logInitialization(HazelcastInstance hz, String mapName, long ticketGrantingTicketTimoutInSeconds, long serviceTicketTimeoutInSeconds) {
         logger.info("Setting up Hazelcast Ticket Registry");
-        if (logger.isDebugEnabled()) {
-            logger.debug("Hazelcast instance: {}", hz);
-            logger.debug("TGT timeout: [{}s]", ticketGrantingTicketTimoutInSeconds);
-            logger.debug("ST timeout: [{}s]", serviceTicketTimeoutInSeconds);
-        }
+        logger.debug("Hazelcast instance: {}", hz);
+        logger.debug("TGT timeout: [{}s]", ticketGrantingTicketTimoutInSeconds);
+        logger.debug("ST timeout: [{}s]", serviceTicketTimeoutInSeconds);
     }
 
     /**
@@ -100,12 +98,14 @@ public class HazelcastTicketRegistry extends AbstractTicketRegistry {
      * A method to get the starting TTL for a ticket based upon type.
      *
      * @param t Ticket to get starting TTL for
+     *
      * @return Initial TTL for ticket
      */
     private long getTimeout(Ticket t) {
         if (t instanceof TicketGrantingTicket) {
             return this.ticketGrantingTicketTimoutInSeconds;
-        } else if (t instanceof ServiceTicket) {
+        }
+        else if (t instanceof ServiceTicket) {
             return this.serviceTicketTimeoutInSeconds;
         }
         throw new IllegalArgumentException("Invalid ticket type");

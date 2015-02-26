@@ -1,3 +1,11 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply from: 'http://tellurianring.com/projects/gradle-plugins/gradle-release/apply.groovy'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 buildscript {
     repositories {
         maven { url 'http://repo.spring.io/plugins-release' }
@@ -5,11 +13,6 @@ buildscript {
     dependencies {
         classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
     }
-}
-
-plugins {
-    id "java"
-    id "groovy"
 }
 
 configure(allprojects) {
@@ -24,13 +27,89 @@ repositories {
 }
 
 dependencies {
-    // CAS depedency. Should be provided
-    provided "org.jasig.cas:cas-server-core:${project.'cas.version'}"
+    provided "org.jasig.cas:cas-server-core:$casVersion"
+    compile  "com.hazelcast:hazelcast:$hazelcastVersion"
+}
 
-    // Hazelcast dependencies
-    compile "com.hazelcast:hazelcast:${project.'hazelcast.version'}"
+//turning off unacceptable Javadoc lint in JDK 8+ which prevents builds with "non-strict" HTML5 javadoc tags
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+      tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+      }
+    }
+}
+
+javadoc {
+    classpath = configurations.compile + configurations.provided
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = "javadoc"
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = "sources"
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    required { gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.1'
+    gradleVersion = 2.3
+}
+
+
+createReleaseTag.dependsOn uploadArchives
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            repository(url: 'https://api.bintray.com/maven/uniconiam/maven/cas-addon-hazelcast-ticket-registry') {
+                authentication(userName: bintrayUsername, password: bintrayAPIKey)
+            }
+            pom.project {
+                name 'CAS addon Hazelcast Ticket Registry'
+                packaging 'jar'
+                description 'An Apereo CAS addon implementation of Hazelcast Ticket Registry'
+                url 'https://github.com/unicon-cas-addons/cas-addon-hazelcast-ticket-registry'
+
+                scm {
+                    url 'scm:git@github.com:unicon-cas-addons/cas-addon-hazelcast-ticket-registry.git'
+                    connection 'scm:git@github.com:unicon-cas-addons/cas-addon-hazelcast-ticket-registry.git'
+                    developerConnection 'scm:git@github.com:unicon-cas-addons/cas-addon-hazelcast-ticket-registry.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'dima767'
+                        name 'Dmitriy Kopylenko'
+                    }
+                    developer {
+                        id 'scalding'
+                        name 'Jonathan Johnson'
+                    }
+                }
+            }
+        }
+    }
 }
