@@ -65,4 +65,5 @@
         <constructor-arg name="ticketGrantingTicketTimoutInSeconds" value="${tgt.maxTimeToLiveInSeconds:28800}"/>
         <constructor-arg name="serviceTicketTimeoutInSeconds" value="${st.timeToKillInSeconds:10}"/>
     </bean>
+
 </beans>

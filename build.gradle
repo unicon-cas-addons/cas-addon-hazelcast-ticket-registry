@@ -29,6 +29,8 @@ repositories {
 dependencies {
     provided "org.jasig.cas:cas-server-core:$casVersion"
     compile  "com.hazelcast:hazelcast:$hazelcastVersion"
+    testCompile "org.springframework:spring-test:$springVersion"
+    testCompile "junit:junit:$junitVersion"
 }
 
 //turning off unacceptable Javadoc lint in JDK 8+ which prevents builds with "non-strict" HTML5 javadoc tags
