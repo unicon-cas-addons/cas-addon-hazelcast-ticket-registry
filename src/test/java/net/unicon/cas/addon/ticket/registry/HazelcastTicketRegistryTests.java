@@ -1,6 +1,5 @@
-package net.unicon.cas.addons.ticket.registry;
+package net.unicon.cas.addon.ticket.registry;
 
-import net.unicon.cas.addon.ticket.registry.HazelcastTicketRegistry;
 import org.jasig.cas.authentication.Authentication;
 import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.ticket.ExpirationPolicy;
