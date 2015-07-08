@@ -11,7 +11,7 @@
             <bean class="com.hazelcast.config.Config">
                 <property name="properties">
                     <util:properties>
-                        <prop key="hazelcast.logging.type">sl4j</prop>
+                        <prop key="hazelcast.logging.type">slf4j</prop>
                         <prop key="hazelcast.max.no.heartbeat.seconds">5</prop>
                     </util:properties>
                 </property>
