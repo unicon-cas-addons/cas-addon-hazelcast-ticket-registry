@@ -7,7 +7,7 @@ CAS ticket registry implementation based on Hazelcast distributed grid software
 Professional Support / Integration Assistance for this module is available. For more information [visit](https://unicon.net/opensource/cas).
 
 ## Current version
-`1.0.0-GA`
+`1.1.0-GA`
 
 ## Supported CAS version
 The minimum supported CAS server version is `4.0.0`
@@ -22,7 +22,7 @@ The minimum supported CAS server version is `4.0.0`
   <dependency>
       <groupId>net.unicon.cas</groupId>
       <artifactId>cas-addon-hazelcast-ticket-registry</artifactId>
-      <version>1.0.0-GA</version>
+      <version>1.1.0-GA</version>
       <scope>runtime</scope>
   </dependency>
   ```
@@ -32,7 +32,7 @@ The minimum supported CAS server version is `4.0.0`
   ```Groovy
   dependencies {
         ...
-        runtime 'net.unicon.cas:cas-addon-hazelcast-ticket-registry:1.0.0-GA'
+        runtime 'net.unicon.cas:cas-addon-hazelcast-ticket-registry:1.1.0-GA'
         ...
   }
   ```
