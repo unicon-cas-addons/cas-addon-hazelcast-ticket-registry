@@ -35,6 +35,8 @@ public class HazelcastTicketRegistry extends AbstractTicketRegistry {
 
     private final long ticketGrantingTicketTimoutInSeconds;
 
+    private final HazelcastInstance hz;
+
     /**
      * @param hz An instance of <code>HazelcastInstance</code>
      * @param mapName Name of map to use
@@ -46,6 +48,7 @@ public class HazelcastTicketRegistry extends AbstractTicketRegistry {
         this.registry = hz.getMap(mapName);
         this.ticketGrantingTicketTimoutInSeconds = ticketGrantingTicketTimoutInSeconds;
         this.serviceTicketTimeoutInSeconds = serviceTicketTimeoutInSeconds;
+        this.hz = hz;
     }
 
     private void logInitialization(HazelcastInstance hz, String mapName, long ticketGrantingTicketTimoutInSeconds, long serviceTicketTimeoutInSeconds) {
@@ -109,5 +112,14 @@ public class HazelcastTicketRegistry extends AbstractTicketRegistry {
             return this.serviceTicketTimeoutInSeconds;
         }
         throw new IllegalArgumentException("Invalid ticket type");
+    }
+
+    /**
+     * Make sure we shutdown HazelCast when the context is destroyed.
+     *
+     * @param sce The event that caused this method to be called.
+     */
+    public void shutdown() {
+        this.hz.shutdown();
     }
 }

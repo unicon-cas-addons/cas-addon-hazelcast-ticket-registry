@@ -35,8 +35,8 @@
                 </property>
                 <property name="networkConfig">
                     <bean class="com.hazelcast.config.NetworkConfig">
-                        <property name="port" value="5701"/>
-                        <property name="portAutoIncrement" value="true"/>
+                        <property name="port" value="${hz.cluster.port:5701}"/>
+                        <property name="portAutoIncrement" value="${hz.cluster.portAutoIncrement:true}"/>
                         <property name="join" ref="tcpIpHazelcastJoinConfig"/>
                     </bean>
                 </property>
@@ -58,7 +58,7 @@
         </property>
     </bean>
 
-    <bean id="ticketRegistry"
+    <bean id="ticketRegistry" destroy-method="shutdown"
           class="net.unicon.cas.addon.ticket.registry.HazelcastTicketRegistry">
         <constructor-arg name="hz" ref="hazelcast"/>
         <constructor-arg name="mapName" value="tickets"/>
