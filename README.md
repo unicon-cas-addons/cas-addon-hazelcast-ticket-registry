@@ -1,6 +1,10 @@
 cas-addon-hazelcast-ticket-registry
 ===================================
 
+# NOTE!!!
+Please note that this library is not maintained anymore, as starting from version `4.1.0`, CAS server includes native implementation of the [Hazelcast ticket registry](https://jasig.github.io/cas/4.1.x/installation/Hazelcast-Ticket-Registry.html). And CAS version `4.2.x` introduced more flexible and powerful [auto configuration model](https://jasig.github.io/cas/4.2.x/installation/Hazelcast-Ticket-Registry.html) for this registry implementation.
+
+
 CAS ticket registry implementation based on Hazelcast distributed grid software
 
 > This project was developed as part of Unicon's [Open Source Support program](https://unicon.net/opensource).
